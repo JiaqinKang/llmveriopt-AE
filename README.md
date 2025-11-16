@@ -19,7 +19,9 @@ Download the dataset package from:
 After downloading and extracting, place the entire `dataset/` directory directly under the `artifact/` folder:
 
 artifact/
+
     dataset/
+    
         <dataset_files_here>
 
 ### 2. Clone this repository

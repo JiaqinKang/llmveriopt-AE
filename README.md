@@ -8,6 +8,20 @@ Both full evaluation and lightweight sampling-based evaluation are supported.
 
 ---
 
+## Platform Requirement
+
+This artifact **must be evaluated on a modern Linux environment**.  
+All scripts (shell scripts, environment setup, execution flow) are developed and tested exclusively on Linux.  
+Running the artifact on Windows or macOS is **not supported** and may lead to failures.
+
+Recommended environment:
+
+- Linux kernel ≥ 5.0  
+- Python 3.10+  
+- CUDA-capable GPU (16–32GB+ depending on model)  
+
+---
+
 ## Installation
 
 ### 1. Download the dataset from Zenodo
@@ -158,7 +172,7 @@ The figure-generation script reproduces all plots and tables from the paper.
 
 ## Notes for Evaluators
 
-- Linux OS is recommended.
+- **Linux OS is required**; other platforms are not supported.
 - GPU memory below the required threshold will result in OOM errors.
 - All generation uses greedy decoding → deterministic output.
 - CPU-only execution is possible but extremely slow.

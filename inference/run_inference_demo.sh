@@ -10,7 +10,7 @@ set -euo pipefail
 # a maximum of **4386 samples**. Evaluators may choose a smaller
 # LIMIT to reduce inference time.
 # ============================================================
-LIMIT=1
+LIMIT=32
 # ============================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

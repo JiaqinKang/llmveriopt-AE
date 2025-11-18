@@ -27,8 +27,8 @@ Native Windows is **not recommended**, but WSL2 typically works.
 
 ### Hardware Requirements
 
-- **Recommended:** GPU ≥ **32 GB** (needed for 7B/8B/32B model evaluation).  
-- **Minimum:** GPU ≥ **16 GB** (sufficient for 3B models).  
+- **Recommended:** Nvidia GPU ≥ **32 GB** (needed for 7B/8B/32B model evaluation).  
+- **Minimum:** Nvidia GPU ≥ **16 GB** (sufficient for 3B models).  
 - **CPU-only mode:** Supported but **extremely slow** (may take days).  
 - We performed all measurements on an **NVIDIA RTX 3090 Ti (24 GB)**.  
   Models larger than 3B may **trigger OOM** on GPUs with < 24 GB.

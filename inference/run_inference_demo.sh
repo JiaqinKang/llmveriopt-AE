@@ -15,59 +15,59 @@ LIMIT=32
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# # ============================================================
-# # NOTE FOR ARTIFACT EVALUATION:
-# # It is strongly recommended to run *only the 3B models*
-# # during evaluation. Models of 7B or larger typically require
-# # **at least 32GB of GPU memory** to perform inference
-# # (depending on precision). Running these larger models on CPU
-# # is possible but will be **extremely slow**.
-# # ============================================================
+# ============================================================
+# NOTE FOR ARTIFACT EVALUATION:
+# It is strongly recommended to run *only the 3B models*
+# during evaluation. Models of 7B or larger typically require
+# **at least 32GB of GPU memory** to perform inference
+# (depending on precision). Running these larger models on CPU
+# is possible but will be **extremely slow**.
+# ============================================================
 
-# # ============================================================
-# # List of configuration files to evaluate.
-# # Comment out any configs you do not want to run.
-# # Paths are relative to this script's directory.
-# # ============================================================
-# CONFIG_FILES=(
-#   "configs/model_latency.yaml"
-#   # "configs/sft_qwen_32b.yaml"
-#   # "configs/sft_qwen_7b.yaml"
-#   "configs/sft_qwen_3b.yaml"
-#   # "configs/sft_llama3_3b.yaml"
-#   # "configs/sft_llama3_8b.yaml"
-#   "configs/model_correctness.yaml"
-#   # # "configs/sft_codellama_7b.yaml"
-#   # "configs/model_zero.yaml"
-#   # "configs/warm_up_model.yaml"
-# )
-# # ============================================================
+# ============================================================
+# List of configuration files to evaluate.
+# Comment out any configs you do not want to run.
+# Paths are relative to this script's directory.
+# ============================================================
+CONFIG_FILES=(
+  "configs/model_latency.yaml"
+  # "configs/sft_qwen_32b.yaml"
+  # "configs/sft_qwen_7b.yaml"
+  "configs/sft_qwen_3b.yaml"
+  # "configs/sft_llama3_3b.yaml"
+  # "configs/sft_llama3_8b.yaml"
+  "configs/model_correctness.yaml"
+  # # "configs/sft_codellama_7b.yaml"
+  # "configs/model_zero.yaml"
+  # "configs/warm_up_model.yaml"
+)
+# ============================================================
 
-# echo "[INFO] Starting batch inference with LIMIT = ${LIMIT}"
+echo "[INFO] Starting batch inference with LIMIT = ${LIMIT}"
 
-# for cfg in "${CONFIG_FILES[@]}"; do
-#   FULL_CFG="${SCRIPT_DIR}/${cfg}"
+for cfg in "${CONFIG_FILES[@]}"; do
+  FULL_CFG="${SCRIPT_DIR}/${cfg}"
 
-#   if [ ! -f "$FULL_CFG" ]; then
-#     echo "[WARN] Config file not found, skipping: $FULL_CFG"
-#     continue
-#   fi
+  if [ ! -f "$FULL_CFG" ]; then
+    echo "[WARN] Config file not found, skipping: $FULL_CFG"
+    continue
+  fi
 
-#   echo "============================================================"
-#   echo "[INFO] Running inference using config: $FULL_CFG"
-#   echo "============================================================"
+  echo "============================================================"
+  echo "[INFO] Running inference using config: $FULL_CFG"
+  echo "============================================================"
 
-#   TMP_CFG="${SCRIPT_DIR}/inference_config.yaml"
-#   cp "$FULL_CFG" "$TMP_CFG"
+  TMP_CFG="${SCRIPT_DIR}/inference_config.yaml"
+  cp "$FULL_CFG" "$TMP_CFG"
 
-#   if [ "$LIMIT" = "null" ]; then
-#       sed -i 's/^limit: .*/limit: null/' "$TMP_CFG" || echo "limit: null" >> "$TMP_CFG"
-#   else
-#       sed -i "s/^limit: .*/limit: ${LIMIT}/" "$TMP_CFG" || echo "limit: ${LIMIT}" >> "$TMP_CFG"
-#   fi
+  if [ "$LIMIT" = "null" ]; then
+      sed -i 's/^limit: .*/limit: null/' "$TMP_CFG" || echo "limit: null" >> "$TMP_CFG"
+  else
+      sed -i "s/^limit: .*/limit: ${LIMIT}/" "$TMP_CFG" || echo "limit: ${LIMIT}" >> "$TMP_CFG"
+  fi
 
-#   python "${SCRIPT_DIR}/inference_demo.py"
-# done
+  python "${SCRIPT_DIR}/inference_demo.py"
+done
 
 echo "============================================================"
 echo "[INFO] Inference finished. Starting verification..."

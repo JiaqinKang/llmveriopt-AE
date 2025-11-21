@@ -1,14 +1,18 @@
-base_model: "Qwen/Qwen2.5-3B-Instruct"  
-adapter: "../models/model_correctness_1epoch"
+# ========== Model Paths ==========
+base_model: "Qwen/Qwen2.5-3B-Instruct" 
+adapter: "../models/model_latency_1epoch"
 
-dataset: "../dataset/model_correctness_prompt/test"
+# ========== Dataset ==========
+dataset: "../dataset/model_latency_and_sft_qwen_prompt/test"
 prompt_column: "prompt"
 
-output_dir: "../inference/output/new_result/model_correctness_1epoch"
+# ========== Output ==========
+output_dir: "../inference/output/new_result/model_latency"
 
+# ========== Inference Hyperparameters ==========
 batch_size: 4
-max_new_tokens: 4096
-limit: 32
+max_new_tokens: 2048
+limit: 8
 temperature: 0.0
 top_p: 1.0
 do_sample: false

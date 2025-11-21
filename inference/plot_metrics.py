@@ -95,23 +95,21 @@ def plot_results(model_stats):
     x = list(range(len(models)))
     bar_width = 0.2
 
-    # 每个 model 下 4 组柱子，位置对称展开
+
     lat_pos  = [i - 1.5 * bar_width for i in x]
     size_pos = [i - 0.5 * bar_width for i in x]
     inst_pos = [i + 0.5 * bar_width for i in x]
     corr_pos = [i + 1.5 * bar_width for i in x]
 
-    # 图稍微缩小一点
     fig, ax1 = plt.subplots(figsize=(8, 4))
 
-    # 左轴：三个 geomean ratio
     bars_lat = ax1.bar(lat_pos,  lat_vals,  width=bar_width, label="Latency Geomean")
     bars_size = ax1.bar(size_pos, size_vals, width=bar_width, label="Size Geomean")
     bars_inst = ax1.bar(inst_pos, inst_vals, width=bar_width, label="Inst Geomean")
 
     ax1.set_ylabel("Geomean Ratio vs O0")
     ax1.set_xticks(x)
-    ax1.set_xticklabels(models, rotation=30, ha='right')  # 稍微少转一点
+    ax1.set_xticklabels(models, rotation=30, ha='right') 
 
     # 右轴：正确率柱状
     ax2 = ax1.twinx()
@@ -123,9 +121,8 @@ def plot_results(model_stats):
         color="tab:red",
     )
     ax2.set_ylabel("Correctness (%)")
-    ax2.set_ylim(0, 110)  # 给顶部数字留点空间
+    ax2.set_ylim(0, 110)  
 
-    # 在柱子顶部标数值
     def add_bar_labels(bars, axis, fmt="{:.2f}", dy=0.02):
         for bar in bars:
             h = bar.get_height()
@@ -143,19 +140,17 @@ def plot_results(model_stats):
     add_bar_labels(bars_inst, ax1, fmt="{:.2f}", dy=0.03)
     add_bar_labels(bars_corr, ax2, fmt="{:.1f}", dy=3.0)
 
-    # 先自动排版，再手动多留底部和左侧空间
     plt.title("Model Performance Summary")
     plt.tight_layout()
     fig.subplots_adjust(left=0.14, bottom=0.35, top=0.88)
 
-    # legend 放在整个图的最下方，和 x 轴文字错开
     handles1, labels1 = ax1.get_legend_handles_labels()
     handles2, labels2 = ax2.get_legend_handles_labels()
     fig.legend(
         handles1 + handles2,
         labels1 + labels2,
         loc="lower center",
-        bbox_to_anchor=(0.5, 0.02),  # 明显在坐标轴区域外面
+        bbox_to_anchor=(0.5, 0.02),
         ncol=4,
         frameon=False,
     )

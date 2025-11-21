@@ -1,0 +1,322 @@
+{
+  "0": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndeclare i32 @faki(...)\n\n@faki = constant ? bytes, exec, align 8\n\ndefine i64 @bikoeff(i32 noundef %#0, i32 noundef %#1) {\n#2:\n  %#3 = alloca i64 4, align 4\n  %#4 = alloca i64 4, align 4\n  store i32 noundef %#0, ptr %#3, align 4\n  store i32 noundef %#1, ptr %#4, align 4\n  %#5 = load i32, ptr %#4, align 4\n  %#6 = call i32 @faki(...noundef i32 %#5)\n  %#7 = load i32, ptr %#3, align 4\n  %#8 = call i32 @faki(...noundef i32 %#7)\n  %#9 = sdiv i32 %#6, %#8\n  %#10 = load i32, ptr %#4, align 4\n  %#11 = load i32, ptr %#3, align 4\n  %#12 = sub nsw i32 %#10, %#11\n  %#13 = call i32 @faki(...noundef i32 %#12)\n  %#14 = mul nsw i32 %#9, %#13\n  %#15 = sext i32 %#14 to i64\n  ret i64 %#15\n}\n=>\ndeclare i32 @faki(...)\n\n@faki = constant ? bytes, exec, align 8\n\ndefine i64 @bikoeff(i32 noundef %#0, i32 noundef %#1) {\n#2:\n  %#3 = call i32 @faki(...noundef i32 noundef %#1)\n  %#4 = call i32 @faki(...noundef i32 noundef %#0)\n  %#5 = sdiv i32 %#3, %#4\n  %#6 = sub nsw i32 noundef %#1, noundef %#0\n  %#7 = call i32 @faki(...noundef i32 %#6)\n  %#8 = mul nsw i32 %#5, %#7\n  %#9 = sext i32 %#8 to i64\n  ret i64 %#9\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 32,
+    "tgt_latency": 14,
+    "src_size": 164,
+    "tgt_size": 168,
+    "src_inst": 16,
+    "tgt_inst": 8
+  },
+  "1": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndeclare {float, float} @foo_float(noundef i32) nofree willreturn memory(read)\n\ndefine void @baz_float(ptr noundef %#0) {\n#1:\n  %#2 = alloca i64 8, align 8\n  store ptr noundef %#0, ptr %#2, align 8\n  %#3 = call {float, float} @foo_float(noundef i32 5) nofree willreturn memory(read)\n  %#5 = extractvalue {float, float} %#3, 1\n  %#6 = load ptr, ptr %#2, align 8\n  store float %#5, ptr %#6, align 4\n  ret void\n}\n=>\ndeclare {float, float} @foo_float(noundef i32) nofree willreturn memory(read)\n\ndefine void @baz_float(ptr noundef %#0) {\n#1:\n  %#2 = call {float, float} @foo_float(noundef i32 5) nofree willreturn memory(read)\n  %#3 = extractvalue {float, float} %#2, 1\n  store float %#3, ptr noundef %#0, align 4\n  ret void\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 9,
+    "tgt_latency": 4,
+    "src_size": 108,
+    "tgt_size": 108,
+    "src_inst": 8,
+    "tgt_inst": 4
+  },
+  "2": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine i128 @foo17003(i128 noundef %#0) {\n#1:\n  %#2 = alloca i64 16, align 16\n  store i128 noundef %#0, ptr %#2, align 16\n  %#3 = load i128, ptr %#2, align 16\n  %#4 = udiv i128 %#3, 7003\n  ret i128 %#4\n}\n=>\ndefine i128 @foo17003(i128 noundef %#0) {\n#1:\n  %#2 = udiv i128 noundef %#0, 7003\n  ret i128 %#2\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 10,
+    "tgt_latency": 5,
+    "src_size": 136,
+    "tgt_size": 96,
+    "src_inst": 5,
+    "tgt_inst": 2
+  },
+  "3": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine i64 @fll(i64 noundef %#0, i64 noundef %#1) {\n#2:\n  %#3 = alloca i64 8, align 8\n  %#4 = alloca i64 8, align 8\n  store i64 noundef %#0, ptr %#3, align 8\n  store i64 noundef %#1, ptr %#4, align 8\n  %#5 = load i64, ptr %#3, align 8\n  %#6 = and i64 %#5, -1048576\n  %#7 = load i64, ptr %#4, align 8\n  %#8 = shl i64 %#7, 0\n  %#9 = and i64 %#8, 1048575\n  %#10 = or i64 %#6, %#9\n  store i64 %#10, ptr %#3, align 8\n  %#11 = load i64, ptr %#3, align 8\n  ret i64 %#11\n}\n=>\ndefine i64 @fll(i64 noundef %#0, i64 noundef %#1) {\n#2:\n  %#3 = and i64 noundef %#0, -1048576\n  %#4 = shl i64 noundef %#1, 0\n  %#5 = and i64 %#4, 1048575\n  %#6 = or i64 %#3, %#5\n  ret i64 %#6\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 20,
+    "tgt_latency": 5,
+    "src_size": 100,
+    "tgt_size": 60,
+    "src_inst": 13,
+    "tgt_inst": 5
+  },
+  "4": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndeclare i32 @restore(noundef i32, noundef i32)\n\ndefine void @do_nothing(ptr noundef %#0) {\n#1:\n  %#2 = alloca i64 8, align 8\n  store ptr noundef %#0, ptr %#2, align 8\n  %#3 = load ptr, ptr %#2, align 8\n  %#4 = load i32, ptr %#3, align 4\n  %#5 = call i32 @restore(noundef i32 %#4, noundef i32 1)\n  %#6 = load ptr, ptr %#2, align 8\n  store i32 %#5, ptr %#6, align 4\n  ret void\n}\n=>\ndeclare i32 @restore(noundef i32, noundef i32)\n\ndefine void @do_nothing(ptr noundef %#0) {\n#1:\n  %#2 = load i32, ptr noundef %#0, align 4\n  %#3 = call i32 @restore(noundef i32 %#2, noundef i32 1)\n  store i32 %#3, ptr noundef %#0, align 4\n  ret void\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 18,
+    "tgt_latency": 9,
+    "src_size": 116,
+    "tgt_size": 112,
+    "src_inst": 8,
+    "tgt_inst": 4
+  },
+  "5": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndeclare ptr @my_alloc2(noundef i32, noundef i32)\n\ndefine i32 @test6(i32 noundef %#0, i32 noundef %#1) {\n#2:\n  %#3 = alloca i64 4, align 4\n  %#4 = alloca i64 4, align 4\n  %#5 = alloca i64 4, align 4\n  %#6 = alloca i64 8, align 8\n  store i32 noundef %#0, ptr %#3, align 4\n  store i32 noundef %#1, ptr %#4, align 4\n  %#7 = load i32, ptr %#4, align 4\n  %#8 = load i32, ptr %#3, align 4\n  %#9 = call ptr @my_alloc2(noundef i32 %#7, noundef i32 %#8)\n  %#10 = zext i32 %#7 to i64\n  assume_align ptr %#9, i64 %#10\n  store ptr %#9, ptr %#6, align 8\n  %#11 = load ptr, ptr %#6, align 8\n  %#12 = ptrtoint ptr %#11 to i64\n  %#13 = and i64 %#12, 15\n  %#14 = trunc i64 %#13 to i32\n  ret i32 %#14\n}\n=>\ndeclare ptr @my_alloc2(noundef i32, noundef i32)\n\ndefine i32 @test6(i32 noundef %#0, i32 noundef %#1) {\n#2:\n  %#3 = alloca i64 8, align 8\n  %#4 = call ptr @my_alloc2(noundef i32 noundef %#1, noundef i32 noundef %#0)\n  %#5 = zext i32 noundef %#1 to i64\n  assume_align ptr %#4, i64 %#5\n  store ptr %#4, ptr %#3, align 8\n  %#6 = ptrtoint ptr %#4 to i64\n  %#7 = and i64 %#6, 15\n  %#8 = trunc i64 %#7 to i32\n  ret i32 %#8\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 20,
+    "tgt_latency": 6,
+    "src_size": 124,
+    "tgt_size": 116,
+    "src_inst": 17,
+    "tgt_inst": 9
+  },
+  "6": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmp55p45uba.ll'\n/tmp/tmp55p45uba.ll:1:1: error: expected top-level entity\nnonnull i8* @frnn1() #0\n^",
+    "src_latency": 6,
+    "tgt_latency": 6,
+    "src_size": 100,
+    "tgt_size": 100,
+    "src_inst": 6,
+    "tgt_inst": 6
+  },
+  "7": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmp7ifnfa1h.ll'\n/tmp/tmp7ifnfa1h.ll:34:5: error: expected top-level entity\n    </instruction>\n    ^",
+    "src_latency": 7,
+    "tgt_latency": 7,
+    "src_size": 116,
+    "tgt_size": 116,
+    "src_inst": 5,
+    "tgt_inst": 5
+  },
+  "8": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndeclare ptr @memchr(noundef ptr, noundef i32, noundef i64)\n\n@.str = constant 2 bytes, align 1\n\ndefine i32 @f(i8 noundef %#0) {\n#1:\n  %#2 = alloca i64 1, align 1\n  store i8 noundef %#0, ptr %#2, align 1\n  %#3 = load i8, ptr %#2, align 1\n  %#4 = zext i8 %#3 to i32\n  %#5 = call ptr @memchr(noundef ptr @.str, noundef i32 %#4, noundef i64 1) nofree noundef nothrow willreturn memory(argmem: read)\n  %#6 = icmp eq ptr %#5, null\n  %#7 = zext i1 %#6 to i32\n  ret i32 %#7\n}\n=>\ndeclare ptr @memchr(noundef ptr, noundef i32, noundef i64)\n\n@.str = constant 2 bytes, align 1\n\ndefine i32 @f(i8 noundef %#0) {\n#1:\n  %#2 = zext i8 noundef %#0 to i32\n  %#3 = call ptr @memchr(nonnull dereferenceable(1) noundef ptr @.str, noundef i32 %#2, noundef i64 1) nofree noundef nothrow willreturn memory(argmem: read)\n  %#4 = icmp eq ptr %#3, null\n  %#5 = zext i1 %#4 to i32\n  ret i32 %#5\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 12,
+    "tgt_latency": 8,
+    "src_size": 124,
+    "tgt_size": 112,
+    "src_inst": 8,
+    "tgt_inst": 5
+  },
+  "9": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine i32 @f4(ptr noundef %#0) {\n#1:\n  %#2 = alloca i64 8, align 8\n  store ptr noundef %#0, ptr %#2, align 8\n  %#3 = load ptr, ptr %#2, align 8\n  %#4 = gep inbounds ptr %#3, 1 x i64 0\n  %#5 = load i8, ptr %#4, align 1\n  %#6 = zext i8 %#5 to i32\n  %#7 = shl i32 1, %#6\n  %#8 = xor i32 %#7, 4294967295\n  ret i32 %#8\n}\n=>\ndefine i32 @f4(ptr noundef %#0) {\n#1:\n  %#2 = gep inbounds ptr noundef %#0, 1 x i64 0\n  %#3 = load i8, ptr %#2, align 1\n  %#4 = zext i8 %#3 to i32\n  %#5 = shl i32 1, %#4\n  %#6 = xor i32 %#5, 4294967295\n  ret i32 %#6\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 12,
+    "tgt_latency": 7,
+    "src_size": 84,
+    "tgt_size": 60,
+    "src_inst": 9,
+    "tgt_inst": 6
+  },
+  "10": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmp2zol61v9.ll'\n/tmp/tmp2zol61v9.ll:37:1: error: expected top-level entity\nanswer;\n^",
+    "src_latency": 10,
+    "tgt_latency": 10,
+    "src_size": 84,
+    "tgt_size": 84,
+    "src_inst": 9,
+    "tgt_inst": 9
+  },
+  "11": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmpo_tos_zq.ll'\n/tmp/tmpo_tos_zq.ll:1:1: error: expected top-level entity\n<unsigned int> result = 0\n^",
+    "src_latency": 9,
+    "tgt_latency": 9,
+    "src_size": 92,
+    "tgt_size": 92,
+    "src_inst": 9,
+    "tgt_inst": 9
+  },
+  "12": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine void @orit(ptr noundef %#0, ptr noundef %#1) {\n#2:\n  %#3 = alloca i64 8, align 8\n  %#4 = alloca i64 8, align 8\n  store ptr noundef %#0, ptr %#3, align 8\n  store ptr noundef %#1, ptr %#4, align 8\n  %#5 = load ptr, ptr %#3, align 8\n  %#6 = gep inbounds ptr %#5, 8 x i32 0, 1 x i64 0\n  %#7 = load i64, ptr %#6, align 8\n  %#8 = load ptr, ptr %#4, align 8\n  %#9 = gep inbounds ptr %#8, 8 x i32 0, 1 x i64 0\n  %#10 = load i64, ptr %#9, align 8\n  %#11 = or i64 %#10, %#7\n  store i64 %#11, ptr %#9, align 8\n  ret void\n}\n=>\ndefine void @orit(ptr noundef %#0, ptr noundef %#1) {\n#2:\n  %#3 = gep inbounds ptr noundef %#0, 8 x i64 0, 1 x i64 0\n  %#4 = load i64, ptr %#3, align 8\n  %#5 = gep inbounds ptr noundef %#1, 8 x i64 0, 1 x i64 0\n  %#6 = load i64, ptr %#5, align 8\n  %#7 = or i64 %#4, %#6\n  store i64 %#7, ptr %#5, align 8\n  ret void\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 21,
+    "tgt_latency": 11,
+    "src_size": 92,
+    "tgt_size": 60,
+    "src_inst": 13,
+    "tgt_inst": 7
+  },
+  "13": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmp9lnubtl1.ll'\n/tmp/tmp9lnubtl1.ll:33:1: error: expected top-level entity\nI think the syntax is correct.\n^",
+    "src_latency": 2,
+    "tgt_latency": 2,
+    "src_size": 84,
+    "tgt_size": 84,
+    "src_inst": 2,
+    "tgt_inst": 2
+  },
+  "14": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine void @fn_test4() {\n#0:\n  %#1 = alloca i64 4, align 4\n  store i32 0, ptr %#1, align 4\n  %#2 = load i32, ptr %#1, align 4\n  %#3 = add nsw i32 %#2, 1\n  store i32 %#3, ptr %#1, align 4\n  ret void\n}\n=>\ndefine void @fn_test4() {\n#0:\n  ret void\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 8,
+    "tgt_latency": 1,
+    "src_size": 76,
+    "tgt_size": 44,
+    "src_inst": 6,
+    "tgt_inst": 1
+  },
+  "15": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\n@d = global 16 bytes, align 8\n\ndefine void @fn8_g(i32 noundef %#0) {\n#1:\n  %#2 = alloca i64 4, align 4\n  store i32 noundef %#0, ptr %#2, align 4\n  %__constexpr_0 = gep inbounds ptr @d, 16 x i32 0, 1 x i64 8\n  %#3 = load i32, ptr %__constexpr_0, align 8\n  %#4 = lshr i32 %#3, 16\n  %#5 = and i32 %#4, 255\n  %#6 = xor i32 %#5, 37\n  %__constexpr_1 = gep inbounds ptr @d, 16 x i32 0, 1 x i64 8\n  %#7 = load i32, ptr %__constexpr_1, align 8\n  %#8 = and i32 %#6, 255\n  %#9 = shl i32 %#8, 16\n  %#10 = and i32 %#7, 4278255615\n  %#11 = or i32 %#10, %#9\n  %__constexpr_2 = gep inbounds ptr @d, 16 x i32 0, 1 x i64 8\n  store i32 %#11, ptr %__constexpr_2, align 8\n  ret void\n}\n=>\n@d = global 16 bytes, align 8\n\ndefine void @fn8_g(i32 noundef %#0) {\n#1:\n  %__constexpr_0 = gep inbounds ptr @d, 16 x i64 0, 1 x i64 8\n  %#2 = load i32, ptr %__constexpr_0, align 8\n  %#3 = lshr i32 %#2, 16\n  %#4 = and i32 %#3, 255\n  %#5 = xor i32 %#4, 37\n  %#6 = and i32 %#5, 255\n  %#7 = shl i32 %#6, 16\n  %#8 = and i32 %#2, 4278255615\n  %#9 = or i32 %#8, %#7\n  %__constexpr_1 = gep inbounds ptr @d, 16 x i64 0, 1 x i64 8\n  store i32 %#9, ptr %__constexpr_1, align 8\n  ret void\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 18,
+    "tgt_latency": 13,
+    "src_size": 112,
+    "tgt_size": 88,
+    "src_inst": 13,
+    "tgt_inst": 10
+  },
+  "16": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine i16 @f69(i16 noundef %#0, i32 noundef %#1) {\n#2:\n  %#3 = alloca i64 2, align 2\n  %#4 = alloca i64 4, align 4\n  store i16 noundef %#0, ptr %#3, align 2\n  store i32 noundef %#1, ptr %#4, align 4\n  %#5 = load i16, ptr %#3, align 2\n  %#6 = zext i16 %#5 to i32\n  %#7 = load i32, ptr %#4, align 4\n  %#8 = shl i32 %#6, %#7\n  %#9 = load i16, ptr %#3, align 2\n  %#10 = zext i16 %#9 to i32\n  %#11 = load i32, ptr %#4, align 4\n  %#12 = sub nsw i32 16, %#11\n  %#13 = ashr i32 %#10, %#12\n  %#14 = add nsw i32 %#8, %#13\n  %#15 = trunc i32 %#14 to i16\n  ret i16 %#15\n}\n=>\ndefine i16 @f69(i16 noundef %#0, i32 noundef %#1) {\n#2:\n  %#3 = zext i16 noundef %#0 to i32\n  %#4 = shl i32 %#3, noundef %#1\n  %#5 = zext i16 noundef %#0 to i32\n  %#6 = sub nsw i32 16, noundef %#1\n  %#7 = lshr i32 %#5, %#6\n  %#8 = add nsw i32 %#4, %#7\n  %#9 = trunc i32 %#8 to i16\n  ret i16 %#9\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 23,
+    "tgt_latency": 7,
+    "src_size": 104,
+    "tgt_size": 72,
+    "src_inst": 16,
+    "tgt_inst": 8
+  },
+  "17": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmpt8dfdg9z.ll'\n/tmp/tmpt8dfdg9z.ll:14:20: error: '%4' defined with type 'i1' but expected 'i32'\n  %6 = sub i32 %5, %4\n                   ^",
+    "src_latency": 24,
+    "tgt_latency": 24,
+    "src_size": 112,
+    "tgt_size": 112,
+    "src_inst": 18,
+    "tgt_inst": 18
+  },
+  "18": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine i64 @dfn_reight() {\n#0:\n  %#1 = alloca i64 8, align 8\n  %#2 = alloca i64 8, align 8\n  %#3 = gep inbounds ptr %#2, 8 x i32 0, 1 x i64 0\n  store i64 4, ptr %#3, align 8\n  %#4 = bitcast ptr %#1 to ptr\n  %#5 = bitcast ptr %#2 to ptr\n  memcpy ptr %#4 align 8, ptr %#5 align 8, i64 8\n  %#6 = gep inbounds ptr %#1, 8 x i32 0, 1 x i64 0\n  %#7 = load i64, ptr %#6, align 8\n  ret i64 %#7\n}\n=>\ndefine i64 @dfn_reight() {\n#0:\n  %#1 = alloca i64 8, align 8\n  %#2 = gep inbounds ptr %#1, 8 x i64 0, 1 x i64 0\n  store i64 4, ptr %#2, align 8\n  memcpy ptr %#1 align 8, ptr %#1 align 8, i64 8\n  %#3 = gep inbounds ptr %#1, 8 x i64 0, 1 x i64 0\n  %#4 = load i64, ptr %#3, align 8\n  ret i64 %#4\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 10,
+    "tgt_latency": 10,
+    "src_size": 80,
+    "tgt_size": 80,
+    "src_inst": 10,
+    "tgt_inst": 7
+  },
+  "19": {
+    "status": "semantic error",
+    "alive_summary": "----------------------------------------\ndeclare i32 @g(...)\n\n@g = constant ? bytes, exec, align 8\n\ndefine i32 @f(i32 noundef %#0) {\n#1:\n  %#8 = alloca i64 4, align 4\n  %#9 = alloca i64 4, align 4\n  %#10 = alloca i64 4, align 4\n  store i32 noundef %#0, ptr %#9, align 4\n  br i1 0, label %#5, label %#2\n\n#2:\n  %#11 = load i32, ptr %#9, align 4\n  %#12 = icmp ne i32 %#11, 0\n  br i1 %#12, label %#3, label %#4\n\n#3:\n  br label %#6\n\n#4:\n  store i32 5, ptr %#8, align 4\n  br label %#7\n\n#5:\n  %#13 = call i32 @g()\n  br label %#6\n\n#6:\n  store i32 3, ptr %#10, align 4\n  %#14 = load i32, ptr %#10, align 4\n  store i32 %#14, ptr %#8, align 4\n  br label %#7\n\n#7:\n  %#15 = load i32, ptr %#8, align 4\n  ret i32 %#15\n}\n=>\ndeclare i32 @g(...)\n\n@g = constant ? bytes, exec, align 8\n\ndefine i32 @f(i32 noundef %#0) {\n#1:\n  %#8 = alloca i64 4, align 4\n  br i1 0, label %#5, label %#2\n\n#2:\n  %#9 = load i32, ptr %#8, align 4\n  %#10 = icmp ne i32 %#9, 0\n  br i1 %#10, label %#3, label %#4\n\n#3:\n  br label %#6\n\n#4:\n  store i32 5, ptr %#8, align 4\n  br label %#7\n\n#5:\n  %#11 = call i32 @g()\n  br label %#6\n\n#6:\n  store i32 3, ptr %#8, align 4\n  %#12 = load i32, ptr %#8, align 4\n  store i32 %#12, ptr %#8, align 4\n  br label %#7\n\n#7:\n  %#13 = load i32, ptr %#8, align 4\n  ret i32 %#13\n}\nTransformation doesn't verify!\n\nERROR: Source is more defined than target\n\nExample:\ni32 noundef %#0 = #x00000003 (3)\n\nSource:\nptr %#8 = pointer(local, block_id=0, offset=0) / Address=#x108\nptr %#9 = pointer(local, block_id=1, offset=0) / Address=#x100\nptr %#10 = pointer(local, block_id=2, offset=0) / Address=#x104\n  >> Jump to %#2\ni32 %#11 = #x00000003 (3)\ni1 %#12 = #x1 (1)\n  >> Jump to %#3\n  >> Jump to %#6\ni32 %#14 = #x00000003 (3)\n  >> Jump to %#7\ni32 %#15 = #x00000003 (3)\n\nSOURCE MEMORY STATE\n===================\nNON-LOCAL BLOCKS:\nBlock 0 >\tsize: 0\talign: 4\talloc type: 0\talive: false\taddress: 0\nBlock 1 >\tsize: 15\talign: 8\talloc type: 0\talive: true\taddress: 192\tconst\nBlock 2 >\tsize: 0\talign: 4\talloc type: 0\talive: true\taddress: 220\nBlock 3 >\tsize: 0\talign: 1\talloc type: 0\talive: true\taddress: 221\n\nLOCAL BLOCKS:\nBlock 4 >\tsize: 4\talign: 4\talloc type: 1\talive: true\taddress: 264\nBlock 5 >\tsize: 4\talign: 4\talloc type: 1\talive: true\taddress: 256\nBlock 6 >\tsize: 4\talign: 4\talloc type: 1\talive: true\taddress: 260\n\nTarget:\nptr %#8 = null\n  >> Jump to %#2\ni32 %#9 = poison\ni1 %#10 = poison\nUB triggered on br\n\nTARGET MEMORY STATE\n===================\nLOCAL BLOCKS:\nBlock 4 >\tsize: 0\talign: 4\talloc type: 0\talive: false\taddress: 0\n\n\nSummary:\n  0 correct transformations\n  1 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 25,
+    "tgt_latency": 25,
+    "src_size": 164,
+    "tgt_size": 164,
+    "src_inst": 19,
+    "tgt_inst": 19
+  },
+  "20": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmpz5xq75g2.ll'\n/tmp/tmpz5xq75g2.ll:1:1: error: expected top-level entity\nvoid @pr6013_6035_test(i8* noundef %0) #0 {\n^",
+    "src_latency": 11,
+    "tgt_latency": 11,
+    "src_size": 72,
+    "tgt_size": 72,
+    "src_inst": 9,
+    "tgt_inst": 9
+  },
+  "21": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmpld0r1n7z.ll'\n/tmp/tmpld0r1n7z.ll:1:1: error: expected top-level entity\nvoid @main() #0 {\n^",
+    "src_latency": 10,
+    "tgt_latency": 10,
+    "src_size": 96,
+    "tgt_size": 96,
+    "src_inst": 9,
+    "tgt_inst": 9
+  },
+  "22": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmpq33l9yvu.ll'\n/tmp/tmpq33l9yvu.ll:1:1: error: expected top-level entity\nvoid @t175_3mul(i8 noundef %0) #0 {\n^",
+    "src_latency": 18,
+    "tgt_latency": 18,
+    "src_size": 136,
+    "tgt_size": 136,
+    "src_inst": 13,
+    "tgt_inst": 13
+  },
+  "23": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmpr3mt4jcd.ll'\n/tmp/tmpr3mt4jcd.ll:13:24: error: '%1' defined with type 'i8' but expected 'i32'\n  %8 = sub nsw i32 32, %1\n                       ^",
+    "src_latency": 32,
+    "tgt_latency": 32,
+    "src_size": 124,
+    "tgt_size": 124,
+    "src_inst": 20,
+    "tgt_inst": 20
+  },
+  "24": {
+    "status": "syntactic error",
+    "alive_summary": "Could not read bitcode from '/tmp/tmp7i6h95yy.ll'\n/tmp/tmp7i6h95yy.ll:1:1: error: expected top-level entity\nvoid @bar() #0\n^",
+    "src_latency": 19,
+    "tgt_latency": 19,
+    "src_size": 160,
+    "tgt_size": 160,
+    "src_inst": 18,
+    "tgt_inst": 18
+  },
+  "25": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndeclare i32 @foo(...)\ndeclare i32 @bar(...)\ndeclare i32 @baz(...)\n\n@foo = constant ? bytes, exec, align 8\n@bar = constant ? bytes, exec, align 8\n@baz = constant ? bytes, exec, align 8\n\ndefine i32 @main(i32 noundef %#0) {\n#1:\n  %#2 = alloca i64 4, align 4\n  %#3 = alloca i64 4, align 4\n  %#4 = alloca i64 4, align 4\n  %#5 = alloca i64 4, align 4\n  %#6 = alloca i64 4, align 4\n  store i32 0, ptr %#2, align 4\n  store i32 noundef %#0, ptr %#3, align 4\n  %#7 = load i32, ptr %#3, align 4\n  %#8 = call i32 @foo(...noundef i32 %#7)\n  store i32 %#8, ptr %#4, align 4\n  %#9 = load i32, ptr %#3, align 4\n  %#10 = call i32 @bar(...noundef i32 %#9)\n  store i32 %#10, ptr %#5, align 4\n  %#11 = load i32, ptr %#3, align 4\n  %#12 = call i32 @baz(...noundef i32 %#11)\n  store i32 %#12, ptr %#6, align 4\n  %#13 = load i32, ptr %#4, align 4\n  %#14 = load i32, ptr %#6, align 4\n  %#15 = add nsw i32 %#13, %#14\n  ret i32 %#15\n}\n=>\ndeclare i32 @foo(...)\ndeclare i32 @bar(...)\ndeclare i32 @baz(...)\n\n@foo = constant ? bytes, exec, align 8\n@bar = constant ? bytes, exec, align 8\n@baz = constant ? bytes, exec, align 8\n\ndefine i32 @main(i32 noundef %#0) {\n#1:\n  %#2 = call i32 @foo(...noundef i32 noundef %#0)\n  %#3 = call i32 @bar(...noundef i32 noundef %#0)\n  %#4 = call i32 @baz(...noundef i32 noundef %#0)\n  %#5 = add nsw i32 %#2, %#4\n  ret i32 %#5\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 33,
+    "tgt_latency": 8,
+    "src_size": 144,
+    "tgt_size": 132,
+    "src_inst": 20,
+    "tgt_inst": 5
+  },
+  "26": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine i32 @my_is_prime(i32 noundef %#0) {\n#1:\n  %#2 = alloca i64 4, align 4\n  store i32 noundef %#0, ptr %#2, align 4\n  ret i32 0\n}\n=>\ndefine i32 @my_is_prime(i32 noundef %#0) {\n#1:\n  ret i32 0\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 2,
+    "tgt_latency": 1,
+    "src_size": 68,
+    "tgt_size": 48,
+    "src_inst": 3,
+    "tgt_inst": 1
+  },
+  "27": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine float @h(float noundef %#0) {\n#1:\n  %#2 = alloca i64 4, align 4\n  store float noundef %#0, ptr %#2, align 4\n  %#3 = load float, ptr %#2, align 4\n  %#4 = load float, ptr %#2, align 4\n  %#5 = fcmp olt float %#4, 0.000000\n  %#7 = select i1 %#5, float -1.000000, float 1.000000\n  %#8 = fmul float %#3, %#7\n  ret float %#8\n}\n=>\ndefine float @h(float noundef %#0) {\n#1:\n  %#2 = fcmp olt float noundef %#0, 0.000000\n  %#4 = select i1 %#2, float -1.000000, float 1.000000\n  %#5 = fmul float noundef %#0, %#4\n  ret float %#5\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 15,
+    "tgt_latency": 6,
+    "src_size": 92,
+    "tgt_size": 64,
+    "src_inst": 9,
+    "tgt_inst": 5
+  },
+  "28": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine i8 @_ZN25custom_lessthan_constantsIaE8do_shiftEa(i8 noundef %#0) noundef {\n#1:\n  %#2 = alloca i64 1, align 1\n  store i8 noundef %#0, ptr %#2, align 1\n  ret i8 0\n}\n=>\ndefine i8 @_ZN25custom_lessthan_constantsIaE8do_shiftEa(i8 noundef %#0) noundef {\n#1:\n  ret i8 0\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 2,
+    "tgt_latency": 1,
+    "src_size": 68,
+    "tgt_size": 48,
+    "src_inst": 3,
+    "tgt_inst": 1
+  },
+  "29": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndefine i32 @sumar(i32 noundef %#0, i32 noundef %#1) {\n#2:\n  %#3 = alloca i64 4, align 4\n  %#4 = alloca i64 4, align 4\n  store i32 noundef %#0, ptr %#3, align 4\n  store i32 noundef %#1, ptr %#4, align 4\n  %#5 = load i32, ptr %#3, align 4\n  %#6 = load i32, ptr %#4, align 4\n  %#7 = add nsw i32 %#5, %#6\n  ret i32 %#7\n}\n=>\ndefine i32 @sumar(i32 noundef %#0, i32 noundef %#1) {\n#2:\n  %#3 = add nsw i32 noundef %#0, noundef %#1\n  ret i32 %#3\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 12,
+    "tgt_latency": 2,
+    "src_size": 80,
+    "tgt_size": 48,
+    "src_inst": 8,
+    "tgt_inst": 2
+  },
+  "30": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\ndeclare void @mbedtls_zeroize(noundef ptr, noundef i64)\ndeclare void @free(noundef ptr)\n\ndefine void @rsa_alt_free_wrap(ptr noundef %#0) {\n#1:\n  %#2 = alloca i64 8, align 8\n  store ptr noundef %#0, ptr %#2, align 8\n  %#3 = load ptr, ptr %#2, align 8\n  call void @mbedtls_zeroize(noundef ptr %#3, noundef i64 32)\n  %#4 = load ptr, ptr %#2, align 8\n  call void @free(noundef allocptr ptr %#4) nothrow willreturn alloc-family(malloc) allockind(free) memory(inaccessiblemem: readwrite)\n  ret void\n}\n=>\ndeclare void @mbedtls_zeroize(noundef ptr, noundef i64)\ndeclare void @free(noundef ptr)\n\ndefine void @rsa_alt_free_wrap(ptr noundef %#0) {\n#1:\n  call void @mbedtls_zeroize(noundef ptr noundef %#0, noundef i64 32)\n  call void @free(noundef allocptr ptr noundef %#0) nothrow willreturn alloc-family(malloc) allockind(free) memory(inaccessiblemem: readwrite)\n  ret void\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 15,
+    "tgt_latency": 6,
+    "src_size": 116,
+    "tgt_size": 112,
+    "src_inst": 7,
+    "tgt_inst": 3
+  },
+  "31": {
+    "status": "correct",
+    "alive_summary": "----------------------------------------\n@array = global 16 bytes, align 4\n\ndefine i32 @main() {\n#0:\n  %#1 = alloca i64 4, align 4\n  store i32 0, ptr %#1, align 4\n  %#2 = load i32, ptr @array, align 4\n  %#3 = sub nsw i32 %#2, 1\n  ret i32 %#3\n}\n=>\n@array = global 16 bytes, align 4\n\ndefine i32 @main() {\n#0:\n  %#1 = load i32, ptr @array, align 4\n  %#2 = sub nsw i32 %#1, 1\n  ret i32 %#2\n}\nTransformation seems to be correct!\n\nSummary:\n  1 correct transformations\n  0 incorrect transformations\n  0 failed-to-prove transformations\n  0 Alive2 errors",
+    "src_latency": 7,
+    "tgt_latency": 6,
+    "src_size": 76,
+    "tgt_size": 56,
+    "src_inst": 5,
+    "tgt_inst": 3
+  }
+}

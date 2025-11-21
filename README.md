@@ -104,7 +104,7 @@ Python 3.10+ is recommended.
 pip install -r requirements.txt
 ```
 
-Main packages: `torch`, `transformers`, `peft`, `datasets`, `pyyaml`.
+Main packages: `torch` with cuda, `transformers`, `peft`, `datasets`, `pyyaml`.
 
 If you need to access gated models (e.g., Llama family), authenticate first:
 
@@ -133,6 +133,8 @@ llmveriopt-AE/
 ├── models/
 ├── dataset/
 ├── inference/
+│   ├── tools 
+│   ├── output
 │   ├── run_inference_demo.sh
 │   ├── run_inference_all.sh
 │   ├── run_model_latency.sh
@@ -154,8 +156,40 @@ cd inference
 chmod +x run_inference_demo.sh
 ./run_inference_demo.sh
 ```
+This script runs a sampling-based evaluation on a **small subset** of the test data.  
+It typically completes **within one hour** on common GPUs.
 
-This runs a small subset of the test data and completes within minutes on common GPUs.
+### Expected Output
+
+Results will be created under:
+
+```
+llmveriopt-AE/inference/output/new_result/
+```
+
+Each model will have its own subdirectory containing:
+
+```
+<model_name>/
+  ├── results.csv
+  └── metrics.json
+```
+
+Reviewers should compare:
+
+```
+llmveriopt-AE/inference/output/new_result/summary.png
+```
+
+**against** the reference version:
+
+```
+llmveriopt-AE/inference/output/reference_results/summary.png
+```
+
+to confirm reproducibility of the evaluation pipeline.  
+All IR outputs, Alive2 verification logs, and detailed metrics are stored under each `<model_name>` directory.
+
 
 ### Full evaluation (large GPU required)
 
@@ -165,8 +199,14 @@ chmod +x run_inference_all.sh
 ./run_inference_all.sh
 ```
 
-Running all models across the entire test set requires ≥ 32GB GPU memory.  
-Smaller devices may fail with out-of-memory errors.
+This script executes **all models on the full test set**.
+
+- Requires **≥ 32GB GPU memory** (recommended: A100 / H100 GPUs).
+- Smaller GPUs may encounter **out-of-memory** failures.
+- Running time is significantly longer than the demo evaluation.
+
+> Note: this script performs **inference only**.  
+> It does **not** generate metrics or summary figures.
 
 ### Final model evaluation (model_latency)
 
@@ -176,7 +216,10 @@ chmod +x run_model_latency.sh
 ./run_model_latency.sh
 ```
 
-This reproduces the full evaluation for the primary model used in the paper.
+This script reproduces the inference output for the **primary model (Model_Latency) used in the paper**.
+
+- Only performs model inference.
+- Does **not** compute metrics or generate plots.
 
 ---
 
@@ -196,23 +239,26 @@ The script reads the included summary table and writes all outputs to:
 reproduce_figures/outputs/
 ```
 
----
-
-## Expected Outputs
-
-Running inference scripts produces:
+Reviewers may compare these newly generated figures with the reference versions stored in:
 
 ```text
-inference/output/<model_name>/results.csv
+artifact_final/llmveriopt-AE/reproduce_figures/outputs/reference_results/
 ```
-
-The figure-generation script reproduces all plots and tables from the paper.
+to confirm reproducibility of all plots in the paper.
 
 ---
 
 ## Notes for Evaluators
 
-- Linux is the **recommended and tested** platform, but any system capable of running `.sh` scripts and installing dependencies may work.
-- GPU memory below the required threshold may result in OOM errors.
-- All generation uses greedy decoding → deterministic output.
-- CPU-only execution is possible but extremely slow.
+- **Linux** is the recommended and tested platform.
+- All decoding uses **greedy decoding** → outputs are **deterministic**.
+- CPU-only execution is supported but **extremely slow**.
+- GPU memory below the recommended threshold will likely cause OOM errors.
+- Only `run_inference_demo.sh` generates:
+  - `metrics.json`
+  - `summary.png`
+  - Alive2 verification logs
+  - IR-generation artifacts  
+
+  The other two scripts perform **inference only**.
+

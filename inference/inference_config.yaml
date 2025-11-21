@@ -1,13 +1,13 @@
-base_model: "Qwen/Qwen2.5-3B-Instruct" 
-adapter: "../models/sft_qwen_3b_1epoch"
+base_model: "Qwen/Qwen2.5-3B-Instruct"  
+adapter: "../models/model_correctness_1epoch"
 
-dataset: "../dataset/model_latency_and_sft_qwen_prompt/test"
+dataset: "../dataset/model_correctness_prompt/test"
 prompt_column: "prompt"
 
-output_dir: "../inference/output/new_result/sft_qwen_3b_1epoch"
+output_dir: "../inference/output/new_result/model_correctness_1epoch"
 
 batch_size: 4
-max_new_tokens: 2048
+max_new_tokens: 4096
 limit: 32
 temperature: 0.0
 top_p: 1.0

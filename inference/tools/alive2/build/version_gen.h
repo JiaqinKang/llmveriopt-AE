@@ -1,0 +1,1 @@
+#define ALIVE_VERSION_MACRO v20.0-22-gf9a4f02f

@@ -66,15 +66,18 @@ for cfg in "${CONFIG_FILES[@]}"; do
   echo "[INFO] Running inference using config: $FULL_CFG"
   echo "============================================================"
 
-  TMp_CFG="${SCRIPT_DIR}/inference_config.yaml"
+  # 🔧 FIXED: Correct variable name (TMP_CFG)
+  TMP_CFG="${SCRIPT_DIR}/inference_config.yaml"
   cp "$FULL_CFG" "$TMP_CFG"
 
+  # Inject limit into temp config
   if [ "$LIMIT" = "null" ]; then
       sed -i 's/^limit: .*/limit: null/' "$TMP_CFG" || echo "limit: null" >> "$TMP_CFG"
   else
       sed -i "s/^limit: .*/limit: ${LIMIT}/" "$TMP_CFG" || echo "limit: ${LIMIT}" >> "$TMP_CFG"
   fi
 
+  # Run inference
   python "${SCRIPT_DIR}/inference_demo.py"
 done
 

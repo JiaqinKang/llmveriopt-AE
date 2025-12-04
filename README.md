@@ -57,7 +57,7 @@ Therefore, older enterprise Linux distributions such as:
 - **Rocky Linux 8**
 - **RHEL 8**
 
-are *not supported*, because their system libraries are too old and will cause errors such as:
+are *not supported*, because their system libraries are too old.
 
 
 

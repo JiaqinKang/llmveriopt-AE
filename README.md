@@ -35,15 +35,31 @@ Native Windows is **not recommended**, but WSL2 typically works.
 
 ### Software Requirements
 
-- Linux environment  
-- Python **3.10+**  
-- PyTorch  
-- Transformers  
-- PEFT  
-- datasets  
-- PyYAML  
+- Ubuntu 24.04 LTS (recommended and tested)
+- Python **3.10+**
+- PyTorch
+- Transformers
+- PEFT
+- datasets
+- PyYAML
 
 (Exact tested versions are listed in `requirements.txt`.)
+
+**Important:**
+This artifact ships with pre-compiled LLVM and Alive2 binaries that require:
+
+- **GLIBC ≥ 2.36**
+- **GLIBCXX ≥ 3.4.30**
+
+Therefore, older enterprise Linux distributions such as:
+
+- **CentOS 7**
+- **Rocky Linux 8**
+- **RHEL 8**
+
+are *not supported*, because their system libraries are too old and will cause errors such as:
+
+
 
 ### Estimated Runtime
 
